@@ -1,0 +1,136 @@
+-name: SG rules
+  sg:
+  - expense-dev-db
+  - expense-dev-backend
+  - expense-dev-app-alb  
+  - expense-dev-frontend
+  - expense-dev-web-alb
+  - expense-dev-bastion
+  - expense-dev-vpn
+
+
+#DB
+  db:
+  -name: db_backend
+   description: db accepting connections backend
+   source: backend 
+   port_no: 3306
+
+  -name: db_bastion
+   desc: db accepting connections from bastion 
+   source: bastion
+   port_no: 3306
+
+  - name: db_vpn
+    desc: db accpeting connections from VPN
+    source: vpn
+    port_no: 3306 
+
+
+
+#Backend
+  -name: backend-app-alb
+   desc: backend accepting from app_alb
+   source: app-alb
+   port_no: 8080  #Listner 8080
+
+  -name: backend-bastion
+   desc: backend accepting from bastion
+   source: bastion
+   port_no: 22
+
+  - name: backend-vpn-ssh
+    desc: backend accepting from vpn ssh
+    source: vpn 
+    port_no: 22
+
+  - name: backend-vpn-http
+    desc: backend accepting from vpn htt
+    source: vpn
+    port_no: 8080  
+
+
+#app_alb : Backend ALB
+  app_alb:
+    - name: app_alb_vpn 
+      desc: app_alb accepting connections from vpn
+      source: vpn
+      port: 80 
+
+  app_alb:
+    - name: app_alb_frontend 
+      desc: app_alb accepting connections from frontend
+      source: frontend
+      port: 80 
+
+  app_alb:
+    - name: app_alb_bastion  
+      desc: app_alb accepting connections from bastion
+      source: bastion
+      port: 80      
+  
+
+
+  frontend:
+  -name: frontend-web_alb
+   desc: frontend accepting from public
+   source: web_alb
+   port_no: 80
+
+  -name: frontend-bastion
+   desc: frontend accepting from bastion
+   source: bastion
+   port_no: 22
+
+  -name: frontend-vpn
+   desc: frontend accepting from vpn
+   source: vpn
+   port_no: 22 
+
+
+
+  web_alb:
+  -name: web_alb_public_http
+   desc: bastion accepting from public
+   source: public #Home address
+   port_no: 80
+
+  -name: web_alb_public_https
+   desc: bastion accepting from public
+   source: public #Home address
+   port_no: 443
+
+#VPN 
+  expense-dev-vpn:
+    - name: vpn_public
+      desc: vpn accpeting connections from public
+      source: public
+      port: 943,443,22,1194
+
+#Bastion public
+
+  bastion_public:
+    - name: bastion_public
+      desc: bastion accpeting connections from public
+      source: public
+      port: 22
+
+  vpn_public:
+    - name: vpn_public
+      desc: vpn accpeting connections from public
+      source: public
+      port: 22
+
+
+
+
+
+
+
+
+    
+
+
+
+
+  
